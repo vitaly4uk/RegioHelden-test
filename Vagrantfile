@@ -64,38 +64,45 @@ Vagrant.configure(2) do |config|
   # Enable provisioning with a shell script. Additional provisioners such as
   # Puppet, Chef, Ansible, Salt, and Docker are also available. Please see the
   # documentation for more information about their specific syntax and use.
-  config.vm.provision "shell", inline: <<-SHELL
-    set -euo pipefail
-    IFS=$'\n\t'
-    set +H
-    sudo apt-get install python-software-properties
-    sudo apt-add-repository ppa:fkrull/deadsnakes
-    if [ ! -f /etc/apt/sources.list.d/pgdg.list ]
-    then
-        sudo sh -c 'echo "deb http://apt.postgresql.org/pub/repos/apt/ trusty-pgdg main" > /etc/apt/sources.list.d/pgdg.list'
-        wget --quiet -O - https://www.postgresql.org/media/keys/ACCC4CF8.asc | sudo apt-key add -
-    fi
-    sudo apt-get update
-    sudo apt-get install -y postgresql python3.5-complete
-    sudo apt-get build-dep -y python3-psycopg2
-    sudo python3.5 -m ensurepip
-    sudo pip3.5 install --upgrade pip
-    cd /vagrant
-    sudo pip3.5 install -r requirements.txt
-    if [ "$(sudo -u postgres psql -l | grep vagrant | head -n 1 | awk '{print $1}')" != "vagrant" ]
-    then
-        printf "Create DB vagrant with user vagrant"
-        sudo -u postgres createdb vagrant
-        set +e
-        sudo -u postgres psql -c "create user vagrant with superuser password 'vagrant'"
-        if [ $? -ne 0 ]
+  config.vm.provision "shell" do |s|
+    s.inline = <<-SHELL
+        set -euo pipefail
+        IFS=$'\n\t'
+        set +H
+        sudo apt-get install python-software-properties
+        sudo apt-add-repository ppa:fkrull/deadsnakes
+        if [ ! -f /etc/apt/sources.list.d/pgdg.list ]
         then
-            sudo -u postgres psql -c "alter user vagrant with superuser password 'vagrant'"
+            sudo sh -c 'echo "deb http://apt.postgresql.org/pub/repos/apt/ trusty-pgdg main" > /etc/apt/sources.list.d/pgdg.list'
+            wget --quiet -O - https://www.postgresql.org/media/keys/ACCC4CF8.asc | sudo apt-key add -
         fi
-        set -e
-        cp ./local_settings.templ.py ./local_settings.py
-        sudo service postgresql restart
-        python3.5 ./manage.py migrate
-    fi
-  SHELL
+        sudo apt-get update
+        sudo apt-get install -y postgresql python3.5-complete
+        sudo apt-get build-dep -y python3-psycopg2
+        sudo python3.5 -m ensurepip
+        sudo pip3.5 install --upgrade pip
+        cd /vagrant
+        sudo pip3.5 install -r requirements.txt
+        if [ "$(sudo -u postgres psql -l | grep vagrant | head -n 1 | awk '{print $1}')" != "vagrant" ]
+        then
+            printf "Create DB vagrant with user vagrant"
+            sudo -u postgres createdb vagrant
+            set +e
+            sudo -u postgres psql -c "create user vagrant with superuser password 'vagrant'"
+            if [ $? -ne 0 ]
+            then
+                sudo -u postgres psql -c "alter user vagrant with superuser password 'vagrant'"
+            fi
+            set -e
+            cp ./local_settings.templ.py ./local_settings.py
+            sudo service postgresql restart
+            while [ ! -f ./local_settings.py ]
+            do
+                sleep 5
+            done
+            python3.5 ./manage.py migrate
+        fi
+      SHELL
+    s.privileged = false
+  end
 end
