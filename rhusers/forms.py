@@ -10,7 +10,7 @@ class UserUpdateForm(forms.ModelForm):
 
     country_code = forms.CharField(max_length=2, validators=[country_name_validator])
     check_digits = forms.IntegerField(max_value=99)
-    bban = forms.CharField(max_length=30, validators=[RegexValidator(r'[0-9a-zA-Z]*')])
+    bban = forms.CharField(max_length=30, validators=[RegexValidator(r'^[0-9a-zA-Z]*$')])
 
     def __init__(self, *args, **kwargs):
         super(UserUpdateForm, self).__init__(*args, **kwargs)
