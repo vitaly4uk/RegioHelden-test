@@ -1,0 +1,11 @@
+{% extends 'base.html' %}
+{% load i18n %}
+{% block content %}
+    <ul>
+        <li>{{ user.first_name }}</li>
+        <li>{{ user.last_name }}</li>
+        <li>{{ user.profile.country_code }} {{ user.profile.check_digits }} {{ user.profile.bban }}</li>
+        <li><a href="edit/">{% trans 'Edit' %}</a></li>
+        <li><a href="delete/">{% trans 'Delete' %}</a></li>
+    </ul>
+{% endblock %}

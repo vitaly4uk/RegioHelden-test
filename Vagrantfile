@@ -98,9 +98,8 @@ Vagrant.configure(2) do |config|
             fi
             set -e
             cp ./local_settings.templ.py ./local_settings.py
-            sudo service postgresql restart
-            python3.5 ./manage.py migrate
         fi
+        python3.5 ./manage.py migrate
       SHELL
     s.privileged = false
   end
