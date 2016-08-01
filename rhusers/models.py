@@ -7,7 +7,7 @@ from iso3166 import countries_by_alpha2
 
 
 def country_name_validator(code):
-    if code.upper() not in countries_by_alpha2.keys():
+    if code.upper() not in countries_by_alpha2:
         raise ValidationError(_('Incorrect country code'))
 
 

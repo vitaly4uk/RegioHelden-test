@@ -1,3 +1,5 @@
 Django==1.8.14
 psycopg2==2.6.2
 iso3166==0.6
+python-social-auth==0.2.19
+dj-database-url==0.4.1

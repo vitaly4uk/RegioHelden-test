@@ -23,10 +23,12 @@ def is_staff_check(user):
     return user.is_staff
 
 urlpatterns = [
+    url(r'^login-url/$', 'django.contrib.auth.views.login'),
     url(r'^admin/', include(admin.site.urls)),
     url(r'^create/$', user_passes_test(is_staff_check)(UserCreateView.as_view())),
     url(r'^(?P<pk>[0-9]*)/delete/$', user_passes_test(is_staff_check)(UserDeleteView.as_view())),
     url(r'^(?P<pk>[0-9]*)/edit/$', user_passes_test(is_staff_check)(UserUpdateView.as_view())),
     url(r'^(?P<pk>[0-9]*)/$', UserDetailView.as_view()),
+    url('', include('social.apps.django_app.urls', namespace='social')),
     url(r'^$', UserListView.as_view()),
 ]
