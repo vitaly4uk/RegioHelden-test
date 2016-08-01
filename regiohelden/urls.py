@@ -14,14 +14,19 @@ Including another URLconf
 """
 from django.conf.urls import include, url
 from django.contrib import admin
+from django.contrib.auth.decorators import user_passes_test
 
 from rhusers.views import UserListView, UserDetailView, UserUpdateView, UserDeleteView, UserCreateView
 
+
+def is_staff_check(user):
+    return user.is_staff
+
 urlpatterns = [
     url(r'^admin/', include(admin.site.urls)),
-    url(r'^create/$', UserCreateView.as_view()),
-    url(r'^(?P<pk>[0-9]*)/delete/$', UserDeleteView.as_view()),
-    url(r'^(?P<pk>[0-9]*)/edit/$', UserUpdateView.as_view()),
+    url(r'^create/$', user_passes_test(is_staff_check)(UserCreateView.as_view())),
+    url(r'^(?P<pk>[0-9]*)/delete/$', user_passes_test(is_staff_check)(UserDeleteView.as_view())),
+    url(r'^(?P<pk>[0-9]*)/edit/$', user_passes_test(is_staff_check)(UserUpdateView.as_view())),
     url(r'^(?P<pk>[0-9]*)/$', UserDetailView.as_view()),
     url(r'^$', UserListView.as_view()),
 ]

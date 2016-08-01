@@ -13,6 +13,7 @@ class IBANProfileInline(admin.StackedInline):
     extra = 1
     max_num = 1
     min_num = 1
+    fk_name = 'user'
 
 
 class UserAdmin(BaseUserAdmin):

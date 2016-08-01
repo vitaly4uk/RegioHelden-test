@@ -1,11 +1,15 @@
 {% extends 'base.html' %}
 {% load i18n %}
 {% block content %}
+    <a href="/"><- {% trans 'Back' %}</a>
     <ul>
-        <li>{{ user.first_name }}</li>
-        <li>{{ user.last_name }}</li>
-        <li>{{ user.profile.country_code }} {{ user.profile.check_digits }} {{ user.profile.bban }}</li>
+        <li>{% trans 'username' %}: {{ user.username }}</li>
+        <li>{% trans 'first name' %}: {{ user.first_name }}</li>
+        <li>{% trans 'last name' %}: {{ user.last_name }}</li>
+        <li>{% trans 'IBAN' %}: {{ user.profile.country_code }} {{ user.profile.check_digits }} {{ user.profile.bban }}</li>
+        {% if user.profile.created_by == request.user %}
         <li><a href="edit/">{% trans 'Edit' %}</a></li>
         <li><a href="delete/">{% trans 'Delete' %}</a></li>
+        {% endif %}
     </ul>
 {% endblock %}

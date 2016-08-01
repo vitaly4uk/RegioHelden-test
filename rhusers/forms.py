@@ -13,6 +13,7 @@ class UserUpdateForm(forms.ModelForm):
     bban = forms.CharField(max_length=30, validators=[RegexValidator(r'^[0-9a-zA-Z]*$')])
 
     def __init__(self, *args, **kwargs):
+        self.user = kwargs.pop('user')
         super(UserUpdateForm, self).__init__(*args, **kwargs)
         try:
             profile = self.instance.profile
@@ -32,14 +33,16 @@ class UserUpdateForm(forms.ModelForm):
                 user=self.instance,
                 country_code=self.cleaned_data['country_code'],
                 check_digits=self.cleaned_data['check_digits'],
-                bban=self.cleaned_data['bban']
+                bban=self.cleaned_data['bban'],
+                created_by=self.user
             )
         else:
             profile.country_code = self.cleaned_data['country_code']
             profile.check_digits = self.cleaned_data['check_digits']
             profile.bban = self.cleaned_data['bban']
+            profile.created_by = self.user
             profile.save()
 
     class Meta:
         model = get_user_model()
-        fields = ['username', 'last_name', 'first_name', 'email']
+        fields = ['username', 'last_name', 'first_name', 'email', 'is_staff']
