@@ -3,3 +3,5 @@ psycopg2==2.6.2
 iso3166==0.6
 python-social-auth==0.2.19
 dj-database-url==0.4.1
+gunicorn==19.6
+whitenoise==3.2
