@@ -116,6 +116,9 @@ AUTHENTICATION_BACKENDS = (
 
 SOCIAL_AUTH_URL_NAMESPACE = 'social'
 
+LOGIN_URL = '/login/'
+LOGOUT_URL = '/logout/'
+
 try:
     from local_settings import *
 except ImportError:

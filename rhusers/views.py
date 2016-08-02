@@ -15,6 +15,7 @@ class UserListView(ListView):
         User = get_user_model()
         return User.objects.all()
 
+
 class UserDetailView(DetailView):
     template_name = 'detail.html'
     context_object_name = 'user'

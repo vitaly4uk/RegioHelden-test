@@ -20,10 +20,11 @@ from rhusers.views import UserListView, UserDetailView, UserUpdateView, UserDele
 
 
 def is_staff_check(user):
-    return user.is_staff
+    return user.is_authenticated() and user.is_staff
 
 urlpatterns = [
-    url(r'^login-url/$', 'django.contrib.auth.views.login'),
+    url(r'^login/$', 'django.contrib.auth.views.login'),
+    url(r'^logout/$', 'django.contrib.auth.views.logout'),
     url(r'^admin/', include(admin.site.urls)),
     url(r'^create/$', user_passes_test(is_staff_check)(UserCreateView.as_view())),
     url(r'^(?P<pk>[0-9]*)/delete/$', user_passes_test(is_staff_check)(UserDeleteView.as_view())),

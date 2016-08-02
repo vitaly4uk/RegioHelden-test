@@ -3,7 +3,7 @@ from django.contrib.auth import get_user_model
 from django.core.exceptions import ObjectDoesNotExist
 from django.core.validators import RegexValidator
 
-from rhusers.models import country_name_validator, IBANProfile
+from rhusers.models import country_name_validator
 
 
 class UserUpdateForm(forms.ModelForm):
@@ -26,22 +26,12 @@ class UserUpdateForm(forms.ModelForm):
 
     def save(self, commit=True):
         super(UserUpdateForm, self).save(commit)
-        try:
-            profile = self.instance.profile
-        except ObjectDoesNotExist:
-            IBANProfile.objects.create(
-                user=self.instance,
-                country_code=self.cleaned_data['country_code'],
-                check_digits=self.cleaned_data['check_digits'],
-                bban=self.cleaned_data['bban'],
-                created_by=self.user
-            )
-        else:
-            profile.country_code = self.cleaned_data['country_code']
-            profile.check_digits = self.cleaned_data['check_digits']
-            profile.bban = self.cleaned_data['bban']
-            profile.created_by = self.user
-            profile.save()
+        profile = self.instance.profile
+        profile.country_code = self.cleaned_data['country_code']
+        profile.check_digits = self.cleaned_data['check_digits']
+        profile.bban = self.cleaned_data['bban']
+        profile.created_by = self.user
+        profile.save()
 
     class Meta:
         model = get_user_model()

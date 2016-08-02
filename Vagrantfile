@@ -100,6 +100,7 @@ Vagrant.configure(2) do |config|
             cp ./local_settings.templ.py ./local_settings.py
         fi
         python3.5 ./manage.py migrate
+        python3.5 ./manage.py test
       SHELL
     s.privileged = false
   end
