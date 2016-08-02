@@ -2,7 +2,7 @@
 {% load i18n %}
 
 {% block content %}
-    {% if user.is_staff %}<a href="/create/">{% trans 'Create' %}</a> <a href="/logout/">{% trans 'Logout' %}</a>{% else %}<a href="/login/">{% trans 'Login' %}</a>{% endif %}
+    {% if user.is_authenticated %}<a href="/logout/">{% trans 'Logout' %}</a>{% if user.is_staff %} <a href="/create/">{% trans 'Create' %}</a>{% endif %}{% else %}<a href="/login/">{% trans 'Login' %}</a>{% endif %}
     <ul>
         {% for user in users %}<li><a href="/{{ user.pk }}/">{{ user.get_full_name|default:user.username }}</a> {{ user.profile.get_full_iban }}</li>{% endfor %}
     </ul>

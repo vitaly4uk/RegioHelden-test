@@ -24,7 +24,7 @@ def is_staff_check(user):
 
 urlpatterns = [
     url(r'^login/$', 'django.contrib.auth.views.login'),
-    url(r'^logout/$', 'django.contrib.auth.views.logout'),
+    url(r'^logout/$', 'django.contrib.auth.views.logout_then_login'),
     url(r'^admin/', include(admin.site.urls)),
     url(r'^create/$', user_passes_test(is_staff_check)(UserCreateView.as_view())),
     url(r'^(?P<pk>[0-9]*)/delete/$', user_passes_test(is_staff_check)(UserDeleteView.as_view())),
